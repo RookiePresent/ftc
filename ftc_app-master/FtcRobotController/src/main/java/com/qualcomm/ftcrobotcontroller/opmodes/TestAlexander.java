@@ -58,9 +58,5 @@ public class TestAlexander extends LinearOpMode {
         rightMotor.setPower(0);
     }
 
-    @Override
-    public void loop() {
 
-    //Comment to see if this works
-    }
 }

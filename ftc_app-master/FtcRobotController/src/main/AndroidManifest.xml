@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
-          android:versionCode="3"
-          android:versionName="User Developed App">
+          android:versionCode="5"
+          android:versionName="1.25">
 
 
   <uses-permission
@@ -32,20 +32,6 @@
     android:required="true" />
 
   <uses-feature android:name="android.hardware.usb.accessory" />
-
-
-
-
-
-  <uses-permission android:name="android.permission.CAMERA"/>
-  <uses-feature android:name="android.hardware.camera"/>
-  <uses-feature android:name="android.hardware.camera.front"/>
-
-
-
-
-
-
 
   <application
     android:allowBackup="true"
@@ -100,6 +86,5 @@
       </intent-filter>
     </activity>
   </application>
-
 
 </manifest>

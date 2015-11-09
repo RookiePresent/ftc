@@ -39,7 +39,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.hardware.Camera;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -49,13 +48,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qualcomm.ftcrobotcontroller.CameraPreview;
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.ftccommon.FtcEventLoop;
 import com.qualcomm.ftccommon.FtcRobotControllerService;
@@ -64,10 +61,7 @@ import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.Restarter;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftcrobotcontroller.opmodes.FtcOpModeRegister;
-import com.qualcomm.ftcrobotcontroller.opmodes.LinearOpModeCamera;
-import com.qualcomm.ftcrobotcontroller.opmodes.OpModeCamera;
-import com.qualcomm.hardware.ModernRoboticsHardwareFactory;
-import com.qualcomm.robotcore.hardware.HardwareFactory;
+import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
 import com.qualcomm.robotcore.util.Dimmer;
 import com.qualcomm.robotcore.util.ImmersiveMode;
@@ -109,61 +103,6 @@ public class FtcRobotControllerActivity extends Activity {
 
   protected FtcEventLoop eventLoop;
 
-
-
-  /////////////////////////////////////////////////////////
-  // ADDED FOR CAMERA!!!
-
-  public void initPreview(final Camera camera, final OpModeCamera context, final Camera.PreviewCallback previewCallback) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        context.preview = new CameraPreview(FtcRobotControllerActivity.this, camera, previewCallback);
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-        previewLayout.addView(context.preview);
-      }
-    });
-  }
-
-  // poor coding style here.  Shouldn't have to duplicate these routines for regular and linear OpModes.
-  public void initPreviewLinear(final Camera camera, final LinearOpModeCamera context, final Camera.PreviewCallback previewCallback) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        context.preview = new CameraPreview(FtcRobotControllerActivity.this, camera, previewCallback);
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-        previewLayout.addView(context.preview);
-      }
-    });
-  }
-
-
-  public void removePreview(final OpModeCamera context) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-        previewLayout.removeAllViews();
-      }
-    });
-  }
-
-  public void removePreviewLinear(final LinearOpModeCamera context) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-        previewLayout.removeAllViews();
-      }
-    });
-  }
-
-  // END CAMERA ADD!!!
-  //////////////////////////////////////////////
-
-
-
-
   protected class RobotRestarter implements Restarter {
 
     public void requestRestart() {
@@ -196,9 +135,6 @@ public class FtcRobotControllerActivity extends Activity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-
-
-
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_ftc_controller);
@@ -237,7 +173,7 @@ public class FtcRobotControllerActivity extends Activity {
 
     hittingMenuButtonBrightensScreen();
 
-    if (USE_DEVICE_EMULATION) { ModernRoboticsHardwareFactory.enableDeviceEmulation(); }
+    if (USE_DEVICE_EMULATION) { HardwareFactory.enableDeviceEmulation(); }
   }
 
   @Override
@@ -361,7 +297,6 @@ public class FtcRobotControllerActivity extends Activity {
           utility.updateHeader(Utility.NO_FILE, R.string.pref_hardware_config_filename, R.id.active_filename, R.id.included_header);
         }
       }
-
     }
   }
 
@@ -385,7 +320,7 @@ public class FtcRobotControllerActivity extends Activity {
     HardwareFactory factory;
 
     // Modern Robotics Factory for use with Modern Robotics hardware
-    ModernRoboticsHardwareFactory modernRoboticsFactory = new ModernRoboticsHardwareFactory(context);
+    HardwareFactory modernRoboticsFactory = new HardwareFactory(context);
     modernRoboticsFactory.setXmlInputStream(fis);
     factory = modernRoboticsFactory;
 
@@ -446,6 +381,4 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
   }
-
-
 }
