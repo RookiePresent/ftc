@@ -10,22 +10,13 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
  */
 public class TeleOp extends OpMode {
 
-    /* Needed:
-    4 DC motors - drive and track
-    variable speed
-    no sensors
-
-    drive motors and tracks get variable speed
-     */
-
+  
 
     DcMotor arm;
 
    // DcMotor leftArm;
    // DcMotor rightArm;
 
-    //DcMotor leftTrack;
-    //DcMotor rightTrack;
 
     DcMotor leftDrive;
     DcMotor rightDrive;
@@ -37,16 +28,12 @@ public class TeleOp extends OpMode {
     public void init() {
 
         //Gets references for motors/sensors from hardware map
-       // leftArm = hardwareMap.dcMotor.get("left_arm");
-       // rightArm = hardwareMap.dcMotor.get("right_arm");
-
+      
         leftDrive = hardwareMap.dcMotor.get("left_drive");
         rightDrive = hardwareMap.dcMotor.get("right_drive");
 
         arm = hardwareMap.dcMotor.get("arm");
 
-        //leftTrack = hardwareMap.dcMotor.get("left_track");
-        //rightTrack = hardwareMap.dcMotor.get("right_track");
 
         //touchSensor = hardwareMap.touchSensor.get("touch");
         //ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
@@ -60,7 +47,7 @@ public class TeleOp extends OpMode {
     }
 
 
-    double trackPow;
+    double armPow;
     double drivePow;
     double sonicVal;
 
@@ -69,8 +56,8 @@ public class TeleOp extends OpMode {
 
 
         telemetry.addData("Drive Power: ", drivePow);
-        telemetry.addData("Ultrasonic Value: ", sonicVal);
-        telemetry.addData("Track Power: ", trackPow);
+       // telemetry.addData("Ultrasonic Value: ", sonicVal);
+        telemetry.addData("Arm Power: ", armPow);
 
 
         //Get the values from the gamepads.
@@ -83,10 +70,11 @@ public class TeleOp extends OpMode {
         float stickR2 = -gamepad2.right_stick_y;
 
 
-            //set the power of the motor with the game pad values
-       // leftArm.setPower(stickL2);
-       // rightArm.setPower(stickR2);
-
+           
+      
+       
+       //Speed Control for arm, if we need it (buggy?)
+/*
         if (gamepad1.dpad_left) {
             trackPow = 0.10;
         } else if (gamepad1.dpad_down) {
@@ -96,26 +84,22 @@ public class TeleOp extends OpMode {
         } else if (gamepad1.dpad_up) {
             trackPow = 1;
         }
+*/
 
+//For test purposes, we'll ignore variable speeds and just make sure everything works right
+//This just sets the power to the value of the joystick, ranging from -1 to 1
+        arm.setPower(stickL2);
+        
+      
+      
+      //Code might not work, meant as a backup if the variable code still gives me jittery movements
+      //Don't think this allows us to go backwards - whatever, just for testing
+      //Controller 1 is drive, 2 is gunner
+left_drive.setPower(gamepad2.right_trigger);
+right_drive.setPower(gamepad2.left_trigger);
 
-
-        if (gamepad2.right_stick_y > 0) {
-            arm.setPower(trackPow);
-        }
-
-        if (gamepad2.right_stick_y < 0) {
-            arm.setPower(-trackPow);
-        }
-
-       /* if (gamepad1.right_trigger > 0) {
-            rightTrack.setPower(trackPow);
-        } else if (gamepad1.left_bumper) {
-            rightTrack.setPower(-trackPow);
-        }*/
-
-        //Code for speed control
-
-        // Choosing a speed with a button (x,a,b,y)
+        
+        //Code for wheel speed control
         if (gamepad1.x) {
             drivePow = 0.10;
         } else if (gamepad1.a) {
@@ -125,7 +109,7 @@ public class TeleOp extends OpMode {
         } else if (gamepad1.y) {
             drivePow = 1;
         }
-        //Code for moving left drive wheel with given speed chosen below below
+        //Moves left drive wheel with given speed chosen above
         if (stickL1 < 0) {
             leftDrive.setPower(-drivePow);
         } else if (stickL1 > 0) {
@@ -133,7 +117,7 @@ public class TeleOp extends OpMode {
         } else {
             leftDrive.setPower(0);
         }
-        //Code for moving right drive wheel with given speed chosen below
+        //Moves right drive wheel with given speed chosen above
         if (stickR1 < 0) {
             rightDrive.setPower(-drivePow);
         } else if (stickR1 > 0) {
@@ -142,6 +126,9 @@ public class TeleOp extends OpMode {
             rightDrive.setPower(0);
         }
 
+
+//Will display the value of an ultrasonic sensor when a touch sensor is pressed
+//Reference code
         /*if(touchSensor.isPressed()) {
             sonicVal = ultrasonicSensor.getUltrasonicLevel();
         }*/
